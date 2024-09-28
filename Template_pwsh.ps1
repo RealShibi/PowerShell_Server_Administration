@@ -69,11 +69,19 @@ begin {
 
     # Handle required modules
     $requiredModules = @("Module1", "Module2")
-    foreach ($module in $requiredModules) {
-        if (-not (Get-Module -ListAvailable -Name $module)) {
-            Handle-Error "Required module '$module' is not installed. Please install it before running this script."
+    function Check-RequiredModules {
+        param (
+            [string[]]$requiredModules
+        )
+            OptionalParameters
+        $requiredModules | ForEach-Object {
+            if (-not (Get-Module -ListAvailable -Name $_)) {
+                Handle-Error "Required module '$_' is not installed. Please install it before running this script."
+            }
         }
+        
     }
+    Check-RequiredModules -requiredModules $requiredModules
 
 
 }
