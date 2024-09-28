@@ -73,7 +73,7 @@ begin {
         param (
             [string[]]$requiredModules
         )
-            OptionalParameters
+        OptionalParameters
         $requiredModules | ForEach-Object {
             if (-not (Get-Module -ListAvailable -Name $_)) {
                 Handle-Error "Required module '$_' is not installed. Please install it before running this script."
