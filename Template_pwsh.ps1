@@ -61,6 +61,21 @@ begin {
         )
         Write-Information $Message
     }
+
+    # check if powershell 7 is running
+    if ($PSVersionTable.PSVersion.Major -lt 7) {
+        Handle-Error "This script requires PowerShell 7 or higher to run."
+    }
+
+    # Handle required modules
+    $requiredModules = @("Module1", "Module2")
+    foreach ($module in $requiredModules) {
+        if (-not (Get-Module -ListAvailable -Name $module)) {
+            Handle-Error "Required module '$module' is not installed. Please install it before running this script."
+        }
+    }
+
+
 }
 
 process {
