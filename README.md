@@ -11,6 +11,12 @@ More Scripts will be provided in future
 - PowerShell 7.0 or higher
 - Windows Server Domain
 
+## Logging logic
+
+C:\shibilogs\shibis_log_currentdate.txt
+example: C:\shibilogs\shibis_log_2025-05-05
+
+No Cleanup logic here btw
 
 ## Installation
 
