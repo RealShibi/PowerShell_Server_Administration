@@ -14,8 +14,13 @@ function Check-RequiredModules {
 function Log-Information {
     param (
         [string]$Message,
-        [string]$LogFile = "C:\logs\shibis_log.txt"
+        [string]$LogFile = "C:\shibilogs\shibis_log.txt"
     )
+    # Ensure the log directory exists
+    $logDir = Split-Path -Path $LogFile -Parent
+    if (-not (Test-Path -Path $logDir)) {
+        New-Item -Path $logDir -ItemType Directory -Force | Out-Null
+    }
     
     $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     "$Timestamp - $Message" | Out-File -FilePath $LogFile -Append
@@ -47,4 +52,4 @@ else {
 }
 
 # Exported functions
-Export-ModuleMember -Function Check-RequiredModules, Log-Information, Handle-Error
+Export-ModuleMember -Function *

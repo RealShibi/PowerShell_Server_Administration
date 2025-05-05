@@ -45,7 +45,6 @@ param (
     [int]$Days,
 
     [Parameter(Mandatory = $true)]
-    [ValidatePattern("^\w+$")]
     [string]$FileEnding,
 
     [Parameter(Mandatory = $false)]
@@ -79,49 +78,15 @@ begin {
     # Initialize an array to store deleted file info
     $deletedFiles = @()
 
-    # Function to handle errors
-    function Handle-Error {
-        param (
-            [string]$Message
-        )
-        Write-Error $Message
-        # Optionally log to a separate error log
-        # Add additional error handling logic if needed
-    }
-
-    # Function to log information
-    function Log-Information {
-        param (
-            [string]$Message
-        )
-        Write-Information $Message
-    }
-
     # Check if PowerShell 7 or higher is running
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         Handle-Error "This script requires PowerShell 7 or higher to run."
     }
-
-    # Define required modules
-    $requiredModules = @("ModuleName1", "ModuleName2")
-
-    function Check-RequiredModules {
-        param (
-            [string[]]$requiredModules
-        )
-        foreach ($module in $requiredModules) {
-            if (-not (Get-Module -ListAvailable -Name $module)) {
-                Handle-Error "Required module '$module' is not installed. Please install it using 'Install-Module -Name $module' before running this script."
-            }
-        }
-    }
-
-    #Check-RequiredModules -requiredModules $requiredModules
 }
 
 process {
     try {
-        Log-Information "Processing..."
+        Log-Information "Processing Log_Cleaning Script..."
 
         # Check if the path exists
         if (-not (Test-Path $Path)) {
@@ -172,9 +137,12 @@ process {
                 Handle-Error "Failed to delete file '$($file.FullName)'. Error: $_"
             }
         }
+        
     }
     catch {
         Handle-Error $_.Exception.Message
+
+        Log-Information "An error occurred Log_Cleaning Script: $($_.Exception.Message)"
     }
 }
 
@@ -196,6 +164,8 @@ end {
     else {
         Write-Information "No files were deleted. No CSV file was created."
     }
-
+    Log-Information "End of Log_Cleaning Script..."
     Stop-Transcript
+    # exit 0 because cleanup 
+    exit 0
 }
