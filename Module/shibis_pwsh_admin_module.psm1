@@ -14,12 +14,15 @@ function Check-RequiredModules {
 function Log-Information {
     param (
         [string]$Message,
-        [string]$LogFile = "C:\shibilogs\shibis_log.txt"
+        [string]$LogDirectory = "C:\shibilogs"
     )
+    # Get current date for filename
+    $currentDate = Get-Date -Format "yyyy-MM-dd"
+    $LogFile = Join-Path -Path $LogDirectory -ChildPath "shibis_log_$currentDate.txt"
+    
     # Ensure the log directory exists
-    $logDir = Split-Path -Path $LogFile -Parent
-    if (-not (Test-Path -Path $logDir)) {
-        New-Item -Path $logDir -ItemType Directory -Force | Out-Null
+    if (-not (Test-Path -Path $LogDirectory)) {
+        New-Item -Path $LogDirectory -ItemType Directory -Force | Out-Null
     }
     
     $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
