@@ -12,24 +12,28 @@
     Example of how to use this script.
 
     .NOTES
-    Author: Your Name
+    Author: Real Shibi
     Date: YYYY-MM-DD
-    Version: 1.0
+    Version: 1.1
 #>
 [CmdletBinding()]
 param (
     # Define parameters here and delete this comment.
     [Parameter(Mandatory = $false)]
-    [string]$csvpath = "\output.csv",
+    [string]$csvpath = "c:\temp\output.csv",
+
     [Parameter(Mandatory = $false)]
+    [ValidateSet("UTF8", "ASCII", "UTF7", "UTF32", "Default", "Unicode")]
     [string]$encoding = "UTF8",
+
+    # `t is tab btw
     [Parameter(Mandatory = $false)]
+    [ValidateSet(";", ",", "`t", "|")]
     [string]$delimiter = ";"
+
 )
 
 begin {
-    # DEFINE FUNCTIONS HERE AND DELETE THIS COMMENT.
-
     $InformationPreference = 'Continue'
     # $VerbosePreference = 'Continue' # Uncomment this line if you want to see verbose messages.
 
@@ -44,46 +48,10 @@ begin {
     [DateTime] $startTime = Get-Date
     Write-Information "Starting script at '$($startTime.ToString('u'))'."
 
-    # Function to handle errors
-    function Handle-Error {
-        param (
-            [string]$Message
-        )
-        Write-Error $Message
-        Stop-Transcript
-        throw $Message
-    }
-
-    # Function to log information
-    function Log-Information {
-        param (
-            [string]$Message
-        )
-        Write-Information $Message
-    }
-
     # check if powershell 7 is running
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         Handle-Error "This script requires PowerShell 7 or higher to run."
     }
-
-    # Handle required modules
-    $requiredModules = @("Module1", "Module2")
-    function Check-RequiredModules {
-        param (
-            [string[]]$requiredModules
-        )
-        OptionalParameters
-        $requiredModules | ForEach-Object {
-            if (-not (Get-Module -ListAvailable -Name $_)) {
-                Handle-Error "Required module '$_' is not installed. Please install it before running this script."
-            }
-        }
-        
-    }
-    Check-RequiredModules -requiredModules $requiredModules
-
-
 }
 
 process {
@@ -105,4 +73,7 @@ end {
     Write-Information "Finished script at '$($finishTime.ToString('u'))'. Took '$elapsedTime' to run."
 
     Stop-Transcript
+
+    # exit 0 because cleanup 
+    exit 0
 }
