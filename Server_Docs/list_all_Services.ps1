@@ -12,9 +12,9 @@
     Example of how to use this script.
 
     .NOTES
-    Author: Your Name
-    Date: YYYY-MM-DD
-    Version: 1.0
+    Author: Real Shibi
+    Date: 2025-06-05
+    Version: 1.1
 #>
 [CmdletBinding()]
 param (
