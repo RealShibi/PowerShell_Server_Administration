@@ -49,6 +49,7 @@ function Handle-Success {
 # Check PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     Handle-Error -ErrorMessage "PowerShell version 7.0 or higher is required."
+    exit 1
 }
 else {
     Handle-Success "PowerShell version should be good."

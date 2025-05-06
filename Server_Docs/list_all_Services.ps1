@@ -42,44 +42,10 @@ begin {
     [DateTime] $startTime = Get-Date
     Write-Information "Starting script at '$($startTime.ToString('u'))'."
 
-    # Function to handle errors
-    function Handle-Error {
-        param (
-            [string]$Message
-        )
-        Write-Error $Message
-        Stop-Transcript
-        throw $Message
+    if (-not (Get-Module -Name "shibis_pwsh_admin_module")) {
+        Write-Host "Required module 'shibis_pwsh_admin_module' is not imported. Please import it before running this script." -ForegroundColor Red
+        exit 1
     }
-
-    # Function to log information
-    function Log-Information {
-        param (
-            [string]$Message
-        )
-        Write-Information $Message
-    }
-
-    # check if powershell 7 is running
-    if ($PSVersionTable.PSVersion.Major -lt 7) {
-        Handle-Error "This script requires PowerShell 7 or higher to run."
-    }
-
-    # Handle required modules
-    $requiredModules = @("Module1", "Module2")
-    function Check-RequiredModules {
-        param (
-            [string[]]$requiredModules
-        )
-        OptionalParameters
-        $requiredModules | ForEach-Object {
-            if (-not (Get-Module -ListAvailable -Name $_)) {
-                Handle-Error "Required module '$_' is not installed. Please install it before running this script."
-            }
-        }
-        
-    }
-    Check-RequiredModules -requiredModules $requiredModules
 }
 
 process {
@@ -88,7 +54,7 @@ process {
         Log-Information "Processing Script list_all_Services..."
         
         # Get all services on the local system
-        $services = Get-Service | Select-Object -Property DisplayName, Name, Status, StartType, ServiceType
+        $services = Get-Service | Select-Object -Property DisplayName, Name, Status, StartType, ServiceType, UserName, BinaryPathName
         # Export the services to a CSV file
         $services | Export-Csv -Path $csvpath -NoTypeInformation -Encoding $encoding -Delimiter $delimiter
         Log-Information "Exported services to '$csvpath'."
