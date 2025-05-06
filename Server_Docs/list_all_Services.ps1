@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     PUT SHORT SCRIPT DESCRIPTION HERE AND ADD ANY ADDITIONAL KEYWORD SECTIONS AS NEEDED (.PARAMETER, .EXAMPLE, ETC.).
 
@@ -12,25 +12,19 @@
     Example of how to use this script.
 
     .NOTES
-    Author: Real Shibi
+    Author: Your Name
     Date: YYYY-MM-DD
-    Version: 1.1
+    Version: 1.0
 #>
 [CmdletBinding()]
 param (
     # Define parameters here and delete this comment.
     [Parameter(Mandatory = $false)]
     [string]$csvpath = "c:\temp\output.csv",
-
     [Parameter(Mandatory = $false)]
-    [ValidateSet("UTF8", "ASCII", "UTF7", "UTF32", "Default", "Unicode")]
     [string]$encoding = "UTF8",
-
-    # `t is tab btw
     [Parameter(Mandatory = $false)]
-    [ValidateSet(";", ",", "`t", "|")]
     [string]$delimiter = ";"
-
 )
 
 begin {
@@ -48,17 +42,57 @@ begin {
     [DateTime] $startTime = Get-Date
     Write-Information "Starting script at '$($startTime.ToString('u'))'."
 
+    # Function to handle errors
+    function Handle-Error {
+        param (
+            [string]$Message
+        )
+        Write-Error $Message
+        Stop-Transcript
+        throw $Message
+    }
+
+    # Function to log information
+    function Log-Information {
+        param (
+            [string]$Message
+        )
+        Write-Information $Message
+    }
+
     # check if powershell 7 is running
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         Handle-Error "This script requires PowerShell 7 or higher to run."
     }
+
+    # Handle required modules
+    $requiredModules = @("Module1", "Module2")
+    function Check-RequiredModules {
+        param (
+            [string[]]$requiredModules
+        )
+        OptionalParameters
+        $requiredModules | ForEach-Object {
+            if (-not (Get-Module -ListAvailable -Name $_)) {
+                Handle-Error "Required module '$_' is not installed. Please install it before running this script."
+            }
+        }
+        
+    }
+    Check-RequiredModules -requiredModules $requiredModules
 }
 
 process {
 
     try {
-        Log-Information "Processing..."
-        # Code Here
+        Log-Information "Processing Script list_all_Services..."
+        
+        # Get all services on the local system
+        $services = Get-Service | Select-Object -Property DisplayName, Name, Status, StartType, ServiceType
+        # Export the services to a CSV file
+        $services | Export-Csv -Path $csvpath -NoTypeInformation -Encoding $encoding -Delimiter $delimiter
+        Log-Information "Exported services to '$csvpath'."
+        Handle-Success "Successfully exported services to '$csvpath'."
 
     }
     catch {
@@ -72,8 +106,8 @@ end {
     [TimeSpan] $elapsedTime = $finishTime - $startTime
     Write-Information "Finished script at '$($finishTime.ToString('u'))'. Took '$elapsedTime' to run."
 
+    log-Information "End of list_all_Services Script..."
     Stop-Transcript
 
-    # exit 0 because cleanup 
     exit 0
 }

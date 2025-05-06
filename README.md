@@ -11,9 +11,20 @@ More Scripts will be provided in future
 - PowerShell 7.0 or higher
 - Windows Server Domain
 
+## Logging logic
+
+C:\shibilogs\shibis_log_currentdate.txt
+example: C:\shibilogs\shibis_log_2025-05-05
+
+No Cleanup logic here btw
 
 ## Installation
 
 1. Clone the repository:
 ```bash
    git clone https://github.com/RealShibi/PowerShell_Server_Administration.git
+```
+2. import the module:
+```bash
+   import-module .\Module\shibis_pwsh_admin_module.psm1
+```
