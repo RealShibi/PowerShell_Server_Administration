@@ -22,9 +22,5 @@ No Cleanup logic here btw
 
 1. Clone the repository:
 ```bash
-   git clone https://github.com/RealShibi/PowerShell_Server_Administration.git
-```
-2. import the module:
-```bash
-   import-module .\Module\shibis_pwsh_admin_module.psm1
+   Install-Module -Name shibis-pwsh-admin-module
 ```

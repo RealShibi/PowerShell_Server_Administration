@@ -13,7 +13,7 @@
 
     .NOTES
     Author: Real Shibi
-    Date: 2025-06-05
+    Date: YYYY-MM-DD
     Version: 1.1
 #>
 [CmdletBinding()]
@@ -21,10 +21,16 @@ param (
     # Define parameters here and delete this comment.
     [Parameter(Mandatory = $false)]
     [string]$csvpath = "c:\temp\output.csv",
+
     [Parameter(Mandatory = $false)]
+    [ValidateSet("UTF8", "ASCII", "UTF7", "UTF32", "Default", "Unicode")]
     [string]$encoding = "UTF8",
+
+    # `t is tab btw
     [Parameter(Mandatory = $false)]
+    [ValidateSet(";", ",", "`t", "|")]
     [string]$delimiter = ";"
+
 )
 
 begin {
@@ -42,23 +48,28 @@ begin {
     [DateTime] $startTime = Get-Date
     Write-Information "Starting script at '$($startTime.ToString('u'))'."
 
-    if (-not (Get-Module -Name "shibis_pwsh_admin_module")) {
-        Write-Host "Required module 'shibis_pwsh_admin_module' is not imported. Please import it before running this script." -ForegroundColor Red
-        exit 1
+    # check if powershell 7 is running
+    if ($PSVersionTable.PSVersion.Major -lt 7) {
+        Handle-Error "This script requires PowerShell 7 or higher to run."
     }
+
+    Check-RequiredModules -Modules "ActiveDirectory"
+
 }
 
 process {
 
     try {
-        Log-Information "Processing Script list_all_Services..."
-        
-        # Get all services on the local system
-        $services = Get-Service | Select-Object -Property DisplayName, Name, Status, StartType, ServiceType, UserName, BinaryPathName
-        # Export the services to a CSV file
-        $services | Export-Csv -Path $csvpath -NoTypeInformation -Encoding $encoding -Delimiter $delimiter
-        Log-Information "Exported services to '$csvpath'."
-        Handle-Success "Successfully exported services to '$csvpath'."
+        Log-Information "Processing script userInformations..."
+        Check-ExportPath -Path "C:\temp"
+        # all users with all properties
+
+        $users = Get-ADUser -Properties * -Filter * | Select-Object *
+        $users | Export-Csv -Path $csvpath -NoTypeInformation -Delimiter $delimiter -Encoding $encoding
+        Log-Information "Exported all users to $csvpath with encoding $encoding and delimiter $delimiter."
+
+        # show only relevant informations
+        $users | Select-Object Name, GivenName, Surname, SamAccountName, PasswordNeverExpires, PasswordExpired, LockedOut, UserPrincipalName, DisplayName, EmailAddress, Title, Department, Company, Manager, LastLogonDate, LastLogonTimestamp, PasswordLastSet, AccountExpirationDate, Enabled, WhenCreated, WhenChanged, SID | Out-GridView -Title "AD Users"
 
     }
     catch {
@@ -72,8 +83,8 @@ end {
     [TimeSpan] $elapsedTime = $finishTime - $startTime
     Write-Information "Finished script at '$($finishTime.ToString('u'))'. Took '$elapsedTime' to run."
 
-    log-Information "End of list_all_Services Script..."
     Stop-Transcript
 
+    # exit 0 because cleanup 
     exit 0
 }

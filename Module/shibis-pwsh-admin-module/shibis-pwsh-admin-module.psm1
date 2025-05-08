@@ -1,4 +1,3 @@
-
 function Check-RequiredModules {
     param (
         [string[]]$Modules
@@ -46,13 +45,29 @@ function Handle-Success {
     Write-Host $SuccessMessage -ForegroundColor Green
 }
 
+# check temp path
+function Check-ExportPath {
+    param (
+        [string]$Path = "C:\temp"
+    )
+    
+    if (-not (Test-Path -Path $Path)) {
+        New-Item -Path $Path -ItemType Directory -Force | Out-Null
+        Handle-Success "Temp path created at $Path."
+    } else {
+    }
+}
+
 # Check PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     Handle-Error -ErrorMessage "PowerShell version 7.0 or higher is required."
+    exit 1
 }
 else {
     Handle-Success "PowerShell version should be good."
 }
+
+Handle-Success "Module succesfully imported"
 
 # Exported functions
 Export-ModuleMember -Function *
