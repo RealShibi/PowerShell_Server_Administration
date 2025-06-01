@@ -18,9 +18,6 @@
     Author: Real Shibi
     Date: 2025-06-01
     Version: 1.0
-
-.LINK
-    https://docs.microsoft.com/powershell/module/activedirectory/get-aduser
 #>
 [CmdletBinding()]
 param (
