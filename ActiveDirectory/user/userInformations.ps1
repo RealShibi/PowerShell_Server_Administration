@@ -1,20 +1,26 @@
 <#
-    .SYNOPSIS
-    PUT SHORT SCRIPT DESCRIPTION HERE AND ADD ANY ADDITIONAL KEYWORD SECTIONS AS NEEDED (.PARAMETER, .EXAMPLE, ETC.).
+.SYNOPSIS
+    Retrieves detailed Active Directory user information.
 
-    .DESCRIPTION
-    Provide a more detailed description of what the script does here.
+.DESCRIPTION
+    This script queries Active Directory for user objects and returns a collection of user properties,
+    such as name, email address, group memberships and other relevant attributes. Can be used for
+    inventory, reporting or auditing purposes.
 
-    .PARAMETER ParameterName
-    Description of the parameter.
+.PARAMETER Identity
+    Specifies the user or users to retrieve. Accepts an AD distinguished name, GUID, security identifier,
+    SAM account name or user principal name. Supports pipeline input.
 
-    .EXAMPLE
-    Example of how to use this script.
+.EXAMPLE
+    .\userInformations.ps1 
 
-    .NOTES
+.NOTES
     Author: Real Shibi
-    Date: YYYY-MM-DD
-    Version: 1.1
+    Date: 2025-06-01
+    Version: 1.0
+
+.LINK
+    https://docs.microsoft.com/powershell/module/activedirectory/get-aduser
 #>
 [CmdletBinding()]
 param (
