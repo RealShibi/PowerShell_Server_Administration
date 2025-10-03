@@ -42,8 +42,8 @@ begin {
     [DateTime] $startTime = Get-Date
     Write-Information "Starting script at '$($startTime.ToString('u'))'."
 
-    if (-not (Get-Module -Name "shibis_pwsh_admin_module")) {
-        Write-Host "Required module 'shibis_pwsh_admin_module' is not imported. Please import it before running this script." -ForegroundColor Red
+    if (-not (Get-Module -Name "shibis-pwsh-admin-module")) {
+        Write-Host "Required module 'shibis-pwsh-admin-module' is not imported. Please import it before running this script." -ForegroundColor Red
         exit 1
     }
 }
